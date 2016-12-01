@@ -95,11 +95,10 @@ SELECT concat(LastName, ', ',FirstName) AS DisplayName
 FROM Employees;
 
 --18) Write a query to add yourself to the Customers table with an order for 'Grandma's Boysenberry Spread'.
-SET IDENTITY_INSERT Customers ON
+
 INSERT INTO Customers (CustomerID, CompanyName, ContactName, ContactTitle, Address, City, Region, PostalCode, Country, Phone, Fax)
 VALUES ('GOLIA', 'Gogo Gadget', 'Travis Golia', 'Coder', '123 Main St', 'Poway', 'CA', 92064, 'USA', '(123)456-7890', NULL);
 
-SET IDENTITY_INSERT Customers OFF
 SET IDENTITY_INSERT Orders ON
 INSERT INTO Orders (OrderID, CustomerID, EmployeeID, OrderDate, RequiredDate, ShippedDate, ShipVia, Freight, ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry)
 VALUES (11078, 'GOLIA', 4, '2016-10-30', '2016-11-16', '2016-11-12', 3, 33.12, 'Wowow', '123 Front St', 'Berlin', NULL, 44087, 'Germany');
@@ -108,16 +107,17 @@ INSERT INTO OrderDetails (OrderID, ProductID, UnitPrice, Quantity, Discount)
 VALUES (11078, 6, 25.00, 2, 0);
 
 --19) Write a query to remove yourself and your order from the database.
-DELETE FROM Customers
-WHERE CustomerID = 'GOLIA';
-
-DELETE FROM Orders
-WHERE OrderID = 11078;
-
 DELETE FROM OrderDetails
 WHERE OrderID = 11078;
 
+DELETE FROM Orders
+WHERE OrderID = 11078; 
+
+DELETE FROM Customers
+WHERE CustomerID = 'GOLIA';
+
 --NOTE: TO MAKE THIS WORK, I WENT INTO TABLE DESIGN->RELATIONSHIPS AND UPDATED THE 'INSERT AND UPDATE Specific' TO 'Cascade' SO THAT IT I COULD DELETE LINKED COLUMNS WITH NO ERROR
+--ALSO, THIS ONLY WORKS NOW WHEN I RUN IT TWICE... WOULD DEFINITELY LIKE TO UNDERSTAND ADDING/DELETING LINKED VALUES BETTER
 
 --20) Write a query to return a list of products from the Products table along with the total units in stock for each product. Include only products with TotalUnits greater than 100.
 SELECT ProductName, UnitsInStock
