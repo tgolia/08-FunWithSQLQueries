@@ -16,7 +16,7 @@ AND (ContactTitle = 'Marketing Manager' OR ContactTitle = 'Sales Representative'
 --4) Write a query to return a list of customer id's from the Orders table with required dates between Jan 1, 1997 and Dec 31, 1997 and with freight under 100 units.
 SELECT CustomerID
 FROM Orders
-WHERE RequiredDate BETWEEN '1997-061-01' AND '1997-12-31'
+WHERE RequiredDate BETWEEN '1997-01-01' AND '1997-12-31'
 AND Freight < 100;
 
 --5) Write a query to return a list of company names and contact names of all customers from Mexico, Sweden and Germany.
@@ -25,7 +25,7 @@ FROM Customers
 WHERE Country = 'Mexico' OR Country = 'Sweden' OR Country = 'Germany';
 
 --6) Write a query to return a count of the number of discontinued products in the Products table.
-SELECT COUNT(Discontinued)
+SELECT COUNT(ProductID) AS NumDiscontinued
 FROM Products
 WHERE Discontinued = 1;
 
@@ -43,7 +43,7 @@ ORDER BY CompanyName;
 --9) Write a query to return the product id and the quantity ordered for each product labelled as 'Quantity Purchased' in the Order Details table ordered by the Quantity Purchased in descending order.
 SELECT ProductID, Quantity AS 'Quantity Purchased'
 FROM OrderDetails
-ORDER BY Quantity;
+ORDER BY Quantity DESC;
 
 --10) Write a query to return the company name, address, city, postal code and country of all customers with orders that shipped using Speedy Express, along with the date that the order was made.
 SELECT Customers.CompanyName, Customers.Address, Customers.City, Customers.PostalCode, Customers.Country, Orders.OrderDate
@@ -54,8 +54,7 @@ WHERE Orders.ShipVia = 1;
 
 --11) Write a query to return a list of Suppliers containing company name, contact name, contact title and region description.
 SELECT CompanyName, ContactName, ContactTitle, Region AS 'Region Description'
-FROM Suppliers
-WHERE Region != 'null';
+FROM Suppliers;
 
 --12) Write a query to return all product names from the Products table that are condiments.
 SELECT Products.ProductName
@@ -89,7 +88,7 @@ FROM Shippers
 LEFT JOIN Orders
 ON Shippers.ShipperID = Orders.ShipVia 
 GROUP BY Orders.ShipName;
---FIND OUT WHERE NULL CAME FROM
+--tODO: FIND OUT WHERE NULL CAME FROM
 
 --17) Write a query to return all employee first and last names from the Employees table by combining the 2 columns aliased as 'DisplayName'. The combined format should be 'LastName, FirstName'.
 SELECT concat(LastName, ', ',FirstName) AS DisplayName
@@ -109,7 +108,16 @@ INSERT INTO OrderDetails (OrderID, ProductID, UnitPrice, Quantity, Discount)
 VALUES (11078, 6, 25.00, 2, 0);
 
 --19) Write a query to remove yourself and your order from the database.
+DELETE FROM Customers
+WHERE CustomerID = 'GOLIA';
 
+DELETE FROM Orders
+WHERE OrderID = 11078;
+
+DELETE FROM OrderDetails
+WHERE OrderID = 11078;
+
+--NOTE: TO MAKE THIS WORK, I WENT INTO TABLE DESIGN->RELATIONSHIPS AND UPDATED THE 'INSERT AND UPDATE Specific' TO 'Cascade' SO THAT IT I COULD DELETE LINKED COLUMNS WITH NO ERROR
 
 --20) Write a query to return a list of products from the Products table along with the total units in stock for each product. Include only products with TotalUnits greater than 100.
 SELECT ProductName, UnitsInStock
